@@ -4,7 +4,7 @@ import json
 import time
 from config import BASE_SYSTEM_PROMPT
 from tools import search_web, check_connection_ip
-from ai import get_search_queries, compress_search_results, optimize_memory, stream_ollama_response
+from ai import get_search_queries, optimize_memory, stream_ollama_response
 
 def print_help():
     print("\n=== Available Commands ===")
@@ -129,12 +129,11 @@ if __name__ == "__main__":
             print(f"[*] Executing searches through the {network_type}...")
             
             for q in queries_to_run:
-                raw_chunk = search_web(q, max_results=5, use_tor=use_tor_mode)
+                raw_chunk = search_web(q, max_results=2, use_tor=use_tor_mode)
                 if raw_chunk:
                     print(f"[*] Filtering and compressing data for: '{q}'...")
-                    compressed_chunk = compress_search_results(q, raw_chunk)
-                    web_context += f"--- Facts for: {q} ---\n{compressed_chunk}\n\n"
-                    time.sleep(2.5) 
+                    web_context += f"--- Facts for: {q} ---\n{raw_chunk}\n\n"
+                    time.sleep(6) 
         else:
             print("\n[*] Answering from memory...")
             

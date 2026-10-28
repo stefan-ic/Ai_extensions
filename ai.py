@@ -55,31 +55,6 @@ Example of a single query line:
         print(f"[!] Routing error: {e}")
         return []
 
-def compress_search_results(query, raw_text):
-    if not raw_text.strip():
-        return ""
-        
-    prompt = f"""You are a data extraction tool. Analyze this raw web text for the query: '{query}'.
-Extract ONLY the hard facts, numbers, and technical details relevant to the query. 
-Write a highly dense, concise summary. Do NOT include conversational filler, disclaimers, or introductory text.
-
-Raw Text:
-{raw_text}"""
-    
-    data = {
-        "model": MODEL,
-        "messages": [{"role": "user", "content": prompt}],
-        "stream": False
-    }
-    
-    try:
-        response = requests.post(OLLAMA_URL, json=data, timeout=300)
-        response.raise_for_status()
-        return response.json().get('message', {}).get('content', '').strip()
-    except Exception as e:
-        print(f"[!] Compression error: {e}. Falling back to raw text slice.")
-        return raw_text[:1000]
-
 def generate_summary(old_messages, old_summary):
     print("\n[!] Memory is filling up. Updating technical changelog...")
     messages_text = "\n".join([f"{m['role']}: {m['content']}" for m in old_messages])
